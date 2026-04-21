@@ -11,7 +11,7 @@ fun GameDetailResponse.toDomain(stores: List<StoreDto>): GameDetail {
 
     return GameDetail(
         title = this.info.title,
-        thumbUrl = this.info.thumb,
+        thumbUrl = buildArtworkUrl(this.info.steamAppID, this.info.thumb),
         cheapestPriceEver = this.cheapestPriceEver.price.toDoubleOrNull() ?: 0.0,
         deals = this.deals.map { it.toDomain(storeMap) }
     )
@@ -27,4 +27,9 @@ fun GameDealDto.toDomain(storeMap: Map<String, StoreDto>): StoreDeal {
         retailPrice = this.retailPrice.toDoubleOrNull() ?: 0.0,
         savingsPercent = this.savings.toDoubleOrNull()?.toInt() ?: 0
     )
+}
+
+private fun buildArtworkUrl(steamAppID: String?, fallback: String): String {
+    val appId = steamAppID?.takeIf { it.isNotBlank() } ?: return fallback
+    return "https://cdn.cloudflare.steamstatic.com/steam/apps/$appId/header.jpg"
 }

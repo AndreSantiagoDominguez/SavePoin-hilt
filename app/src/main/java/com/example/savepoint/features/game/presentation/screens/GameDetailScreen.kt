@@ -27,14 +27,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.example.savepoint.core.di.appContainer
+import com.example.savepoint.core.util.toMxnPrice
 import com.example.savepoint.features.game.presentation.components.BestDealBanner
 import com.example.savepoint.features.game.presentation.components.GameDealCard
 import com.example.savepoint.features.game.presentation.viewmodels.GameViewModel
@@ -42,9 +45,12 @@ import com.example.savepoint.features.game.presentation.viewmodels.GameViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GameDetailScreen(
-    onBack: () -> Unit,
-    viewModel: GameViewModel = hiltViewModel()
+    onBack: () -> Unit
 ) {
+    val viewModel: GameViewModel = viewModel(
+        factory = appContainer().gameContainer.gameViewModelFactory()
+    )
+
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
@@ -89,7 +95,7 @@ fun GameDetailScreen(
                     Text(
                         text = uiState.error ?: "Error desconocido",
                         modifier = Modifier.align(Alignment.Center),
-                        color = Color.Red
+                        color = MaterialTheme.colorScheme.error
                     )
                 }
                 uiState.gameDetail != null -> {
@@ -102,14 +108,18 @@ fun GameDetailScreen(
                             .verticalScroll(rememberScrollState())
                     ) {
                         AsyncImage(
-                            model = game.thumbUrl,
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(game.thumbUrl)
+                                .crossfade(true)
+                                .build(),
                             contentDescription = game.title,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(200.dp)
+                                .height(220.dp)
                                 .padding(horizontal = 16.dp)
                                 .clip(RoundedCornerShape(16.dp)),
-                            contentScale = ContentScale.Crop
+                            contentScale = ContentScale.Crop,
+                            filterQuality = FilterQuality.High
                         )
 
                         Spacer(modifier = Modifier.height(12.dp))
@@ -122,7 +132,7 @@ fun GameDetailScreen(
                         )
 
                         Text(
-                            text = "Precio más bajo registrado: $${String.format("%.2f", game.cheapestPriceEver)}",
+                            text = "Precio más bajo registrado: ${game.cheapestPriceEver.toMxnPrice()}",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)

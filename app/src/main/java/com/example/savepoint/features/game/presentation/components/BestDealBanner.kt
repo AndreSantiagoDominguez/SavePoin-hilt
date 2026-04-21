@@ -18,10 +18,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.example.savepoint.core.util.toMxnPrice
 import com.example.savepoint.features.game.domain.entities.StoreDeal
 
 @Composable
@@ -45,7 +49,7 @@ fun BestDealBanner(
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "🏆 MEJOR OFERTA",
+                text = "MEJOR OFERTA",
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -60,11 +64,15 @@ fun BestDealBanner(
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     AsyncImage(
-                        model = deal.storeIconUrl,
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(deal.storeIconUrl)
+                            .crossfade(true)
+                            .build(),
                         contentDescription = deal.storeName,
                         modifier = Modifier
-                            .size(24.dp)
-                            .clip(RoundedCornerShape(4.dp))
+                            .size(28.dp)
+                            .clip(RoundedCornerShape(4.dp)),
+                        filterQuality = FilterQuality.High
                     )
 
                     Spacer(modifier = Modifier.width(8.dp))
@@ -79,14 +87,14 @@ fun BestDealBanner(
 
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
-                        text = "$${String.format("%.2f", deal.price)}",
+                        text = deal.price.toMxnPrice(),
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.ExtraBold,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
 
                     Text(
-                        text = "$${String.format("%.2f", deal.retailPrice)}",
+                        text = deal.retailPrice.toMxnPrice(),
                         style = MaterialTheme.typography.bodySmall,
                         textDecoration = TextDecoration.LineThrough,
                         color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.6f)

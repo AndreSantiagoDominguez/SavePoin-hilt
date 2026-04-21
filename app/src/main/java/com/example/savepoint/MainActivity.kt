@@ -13,9 +13,7 @@ import com.example.savepoint.core.navigation.Routes
 import com.example.savepoint.core.ui.theme.SavePointTheme
 import com.example.savepoint.features.deals.presentation.screens.DealsScreen
 import com.example.savepoint.features.game.presentation.screens.GameDetailScreen
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

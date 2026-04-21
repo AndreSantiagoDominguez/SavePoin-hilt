@@ -4,9 +4,8 @@ import com.example.savepoint.core.network.CheapSharkApi
 import com.example.savepoint.features.deals.data.datasources.remote.mapper.toDomain
 import com.example.savepoint.features.deals.domain.entities.Deal
 import com.example.savepoint.features.deals.domain.repositories.DealsRepository
-import javax.inject.Inject
 
-class DealsRepositoryImpl @Inject constructor(
+class DealsRepositoryImpl(
     private val api: CheapSharkApi
 ) : DealsRepository {
 

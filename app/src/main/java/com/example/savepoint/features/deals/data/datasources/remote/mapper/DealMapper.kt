@@ -12,8 +12,13 @@ fun DealDto.toDomain(): Deal {
         savingsPercent = this.savings.toDoubleOrNull()?.toInt() ?: 0,
         metacriticScore = this.metacriticScore.toIntOrNull() ?: 0,
         dealRating = this.dealRating,
-        thumbUrl = this.thumb,
+        thumbUrl = buildArtworkUrl(steamAppID, thumb),
         gameId = this.gameID,
         storeId = this.storeID
     )
+}
+
+private fun buildArtworkUrl(steamAppID: String?, fallback: String): String {
+    val appId = steamAppID?.takeIf { it.isNotBlank() } ?: return fallback
+    return "https://cdn.cloudflare.steamstatic.com/steam/apps/$appId/header.jpg"
 }

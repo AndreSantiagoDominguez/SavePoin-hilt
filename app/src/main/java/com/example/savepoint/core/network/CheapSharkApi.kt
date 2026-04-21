@@ -10,8 +10,9 @@ interface CheapSharkApi {
 
     @GET("deals")
     suspend fun getDeals(
-        @Query("pageSize") pageSize: Int = 20,
-        @Query("sortBy") sortBy: String = "Deal Rating"
+        @Query("pageSize") pageSize: Int = 60,
+        @Query("sortBy") sortBy: String = "Savings",
+        @Query("onSale") onSale: Int = 1
     ): List<DealDto>
 
     @GET("games")

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -20,13 +19,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.example.savepoint.core.util.toMxnPrice
 
 @Composable
 fun DealCard(
@@ -51,12 +53,16 @@ fun DealCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             AsyncImage(
-                model = thumbUrl,
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(thumbUrl)
+                    .crossfade(true)
+                    .build(),
                 contentDescription = "Imagen de $title",
                 modifier = Modifier
-                    .size(width = 120.dp, height = 90.dp)
+                    .size(width = 130.dp, height = 96.dp)
                     .clip(RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp)),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                filterQuality = FilterQuality.High
             )
 
             Column(
@@ -79,14 +85,14 @@ fun DealCard(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        text = "$${String.format("%.2f", salePrice)}",
+                        text = salePrice.toMxnPrice(),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.ExtraBold,
                         color = MaterialTheme.colorScheme.primary
                     )
 
                     Text(
-                        text = "$${String.format("%.2f", normalPrice)}",
+                        text = normalPrice.toMxnPrice(),
                         style = MaterialTheme.typography.bodySmall,
                         textDecoration = TextDecoration.LineThrough,
                         color = MaterialTheme.colorScheme.onSurfaceVariant

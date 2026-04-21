@@ -16,11 +16,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.savepoint.core.di.appContainer
 import com.example.savepoint.features.deals.presentation.components.DealCard
 import com.example.savepoint.features.deals.presentation.viewmodels.DealsViewModel
 
@@ -28,7 +28,9 @@ import com.example.savepoint.features.deals.presentation.viewmodels.DealsViewMod
 @Composable
 fun DealsScreen(
     onDealClick: (gameId: String) -> Unit,
-    viewModel: DealsViewModel = hiltViewModel()
+    viewModel: DealsViewModel = viewModel(
+        factory = appContainer().dealsContainer.dealsViewModelFactory()
+    )
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -38,7 +40,7 @@ fun DealsScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "\uD83C\uDFAE SavePoint",
+                        text = "SavePoint",
                         fontWeight = FontWeight.ExtraBold
                     )
                 }
@@ -58,7 +60,7 @@ fun DealsScreen(
                     Text(
                         text = uiState.error ?: "Error desconocido",
                         modifier = Modifier.align(Alignment.Center),
-                        color = Color.Red
+                        color = MaterialTheme.colorScheme.error
                     )
                 }
                 uiState.deals.isEmpty() -> {
@@ -73,7 +75,10 @@ fun DealsScreen(
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = PaddingValues(vertical = 8.dp)
                     ) {
-                        items(uiState.deals) { deal ->
+                        items(
+                            items = uiState.deals,
+                            key = { deal -> deal.gameId }
+                        ) { deal ->
                             DealCard(
                                 title = deal.title,
                                 salePrice = deal.salePrice,

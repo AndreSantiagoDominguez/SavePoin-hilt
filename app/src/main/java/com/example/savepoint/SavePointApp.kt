@@ -1,7 +1,15 @@
 package com.example.savepoint
 
 import android.app.Application
-import dagger.hilt.android.HiltAndroidApp
+import com.example.savepoint.core.di.AppContainer
 
-@HiltAndroidApp
-class SavePointApp : Application()
+class SavePointApp : Application() {
+
+    lateinit var appContainer: AppContainer
+        private set
+
+    override fun onCreate() {
+        super.onCreate()
+        appContainer = AppContainer()
+    }
+}

@@ -2,9 +2,8 @@ package com.example.savepoint.features.game.domain.usecases
 
 import com.example.savepoint.features.game.domain.entities.GameDetail
 import com.example.savepoint.features.game.domain.repositories.GameRepository
-import javax.inject.Inject
 
-class GetGameDetailUseCase @Inject constructor(
+class GetGameDetailUseCase(
     private val repository: GameRepository
 ) {
 

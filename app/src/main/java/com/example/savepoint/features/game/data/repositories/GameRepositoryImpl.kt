@@ -4,9 +4,8 @@ import com.example.savepoint.core.network.CheapSharkApi
 import com.example.savepoint.features.game.data.datasources.remote.mapper.toDomain
 import com.example.savepoint.features.game.domain.entities.GameDetail
 import com.example.savepoint.features.game.domain.repositories.GameRepository
-import javax.inject.Inject
 
-class GameRepositoryImpl @Inject constructor(
+class GameRepositoryImpl(
     private val api: CheapSharkApi
 ) : GameRepository {
 
